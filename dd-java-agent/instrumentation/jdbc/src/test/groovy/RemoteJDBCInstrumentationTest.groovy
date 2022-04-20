@@ -33,25 +33,29 @@ class RemoteJDBCInstrumentationTest extends AgentTestRunner {
   @Shared
   private Map<String, String> jdbcUrls = [
     "postgresql": "jdbc:postgresql://localhost:5432/$dbName",
-    "mysql"     : "jdbc:mysql://localhost:3306/$dbName"
+    "mysql"     : "jdbc:mysql://localhost:3306/$dbName",
+    "mysql-aws" : "jdbc:mysql:aws://localhost:3306/$dbName",
   ]
 
   @Shared
   private Map<String, String> jdbcDriverClassNames = [
     "postgresql": "org.postgresql.Driver",
-    "mysql"     : "com.mysql.jdbc.Driver"
+    "mysql"     : "com.mysql.jdbc.Driver",
+    "mysql-aws" : "software.aws.rds.jdbc.mysql.Driver",
   ]
 
   @Shared
   private Map<String, String> jdbcUserNames = [
     "postgresql": "sa",
-    "mysql"     : "sa"
+    "mysql"     : "sa",
+    "mysql-aws" : "sa",
   ]
 
   @Shared
   private Map<String, String> jdbcPasswords = [
     "mysql"     : "sa",
-    "postgresql": "sa"
+    "postgresql": "sa",
+    "mysql-aws" : "sa",
   ]
 
   @Shared
@@ -158,6 +162,7 @@ class RemoteJDBCInstrumentationTest extends AgentTestRunner {
         .withDatabaseName(dbName).withUsername("sa").withPassword("sa")
       mysql.start()
       jdbcUrls.put("mysql", "${mysql.getJdbcUrl()}")
+      jdbcUrls.put("mysql-aws", "${mysql.getJdbcUrl().replace('jdbc:mysql', 'jdbc:mysql:aws')}")
     }
     prepareConnectionPoolDatasources()
   }
@@ -230,6 +235,7 @@ class RemoteJDBCInstrumentationTest extends AgentTestRunner {
     driver       | connection                                              | renameService | query                   | operation | obfuscatedQuery
     "mysql"      | connectTo(driver, peerConnectionProps)                  | false         | "SELECT 3"              | "SELECT"  | "SELECT ?"
     "postgresql" | connectTo(driver, peerConnectionProps)                  | false         | "SELECT 3 FROM pg_user" | "SELECT"  | "SELECT ? FROM pg_user"
+    "mysql-aws"  | connectTo(driver, peerConnectionProps)                  | false         | "SELECT 3"              | "SELECT"  | "SELECT ?"
     "mysql"      | cpDatasources.get("tomcat").get(driver).getConnection() | false         | "SELECT 3"              | "SELECT"  | "SELECT ?"
     "postgresql" | cpDatasources.get("tomcat").get(driver).getConnection() | false         | "SELECT 3 FROM pg_user" | "SELECT"  | "SELECT ? FROM pg_user"
     "mysql"      | cpDatasources.get("hikari").get(driver).getConnection() | false         | "SELECT 3"              | "SELECT"  | "SELECT ?"

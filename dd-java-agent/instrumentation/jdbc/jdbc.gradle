@@ -42,6 +42,7 @@ dependencies {
 
   testImplementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.23'
   testImplementation group: 'org.postgresql', name: 'postgresql', version: '[9.4,42.2.18]'
+  testImplementation group: 'software.aws.rds', name: 'aws-mysql-jdbc', version: '1.0.0'
 
   testImplementation "org.testcontainers:mysql:1.15.1"
   testImplementation "org.testcontainers:postgresql:1.15.1"
@@ -72,10 +73,10 @@ dependencies {
   latestDepJava11TestImplementation group: 'com.zaxxer', name: 'HikariCP', version: '+'
 }
 
-tasks.named("test").configure {
-  dependsOn "oldH2Test"
-  dependsOn "oldPostgresTest"
-}
+//tasks.named("test").configure {
+//  dependsOn "oldH2Test"
+//  dependsOn "oldPostgresTest"
+//}
 
 tasks.named("latestDepJava11Test").configure {
   javaLauncher = getJavaLauncherFor(11)

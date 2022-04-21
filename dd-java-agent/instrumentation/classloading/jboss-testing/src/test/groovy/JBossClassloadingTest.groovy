@@ -4,7 +4,10 @@ import org.jboss.modules.ModuleIdentifier
 import org.jboss.modules.ModuleLoadException
 import org.jboss.modules.ModuleLoader
 import org.jboss.modules.ModuleSpec
+import spock.lang.IgnoreIf
 
+// TODO __redirected.__SAXParserFactory can't access com.sun.org.apache.xerces.internal.jaxp on JDK17
+@IgnoreIf({ new BigDecimal(System.getProperty("java.specification.version")).isAtLeast(17.0) })
 class JBossClassloadingTest extends AgentTestRunner {
   def "delegates to bootstrap class loader for agent classes"() {
     setup:

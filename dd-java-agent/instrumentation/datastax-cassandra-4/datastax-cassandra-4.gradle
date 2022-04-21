@@ -1,5 +1,7 @@
 ext {
   minJavaVersionForTests = JavaVersion.VERSION_1_8
+  // TODO Embedded cassandra start that deadlocks every time on Java 17
+  maxJavaVersionForTests = JavaVersion.VERSION_15
 }
 
 muzzle {
